@@ -61,6 +61,7 @@ function install-github-desktop() {
 }
 
 function notification() {
+
 	zenity --notification --text="GitHub-Desktop\nGitHub-Desktop está instalado na versão $1."
 }
 # -------------------------------- EXECUTION ----------------------------------------- #
@@ -92,6 +93,7 @@ if [ "$(cat $INSTALLED_VERSION)" != "$(echo $UPDATED_VERSION)" ]; then
 	notification "$INSTALLED_VERSION"
 else
 	zenity  --warning --text="A versão do GitHub-Desktop disponível no repositório remoto é a mesma instalada!\n\n" --ellipsize
+	INSTALLED_VERSION="$(cat $INSTALLED_VERSION)"
 	notification "$INSTALLED_VERSION"
 fi
 
