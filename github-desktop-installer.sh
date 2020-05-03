@@ -29,6 +29,7 @@
 #   v1.1 03/05/2020, Luciano
 #		- Atualização do código e comentários
 #		- Atualização do nome do script
+#		- Adicionado função de notificação
 #
 #
 # ----------------------------------------------------------------------------------- #
@@ -79,7 +80,7 @@ if [ -e $(which github-desktop) != 0 ]; then
 	zenity --question --title="Instalação do GitHub-Desktop" --text="O GitHub-Desktop não esta instalado, você deseja instalá-lo agora?\n\n" --ellipsize
 	[ $? == 0 ] && install-github-desktop
 	unset INSTALLED_VERSION && INSTALLED_VERSION="$UPDATED_VERSION"
-	notification "INSTALLED_VERSION"
+	notification "$INSTALLED_VERSION"
 	exit 0
 fi
 
@@ -88,10 +89,10 @@ if [ "$(cat $INSTALLED_VERSION)" != "$(echo $UPDATED_VERSION)" ]; then
 	zenity zenity --question --title="Atualização do GitHub-Desktop" --text="Existe uma nova versão do GitHub-Desktop, você deseja atualizá-lo agora?\n\n" --ellipsize
 	[ $? == 0 ] && install-github-desktop
 	unset INSTALLED_VERSION && INSTALLED_VERSION="$UPDATED_VERSION"
+	notification "$INSTALLED_VERSION"
 else
 	zenity  --warning --text="A versão do GitHub-Desktop disponível no repositório remoto é a mesma instalada!\n\n" --ellipsize
+	notification "$INSTALLED_VERSION"
 fi
-
-
 
 exit 0
