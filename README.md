@@ -1,6 +1,6 @@
 # GitHub-Desktop-For-Linux-Installer
 
-![Screenshot](https://github.com/LucianoAparecidoBritoGuedes/GitHub-Desktop-For-Linux-Installer/images/github-desktop-in-linux.png)
+![Screenshot](GitHub-Desktop-For-Linux-Installer/images/github-desktop-in-linux.png)
 
 ## Description
 
