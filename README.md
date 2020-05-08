@@ -1,6 +1,6 @@
 # GitHub-Desktop-For-Linux-Installer
 
-![Screenshot](GitHub-Desktop-For-Linux-Installer/images/github-desktop-in-linux.png)
+![](/images/github-desktop-in-linux.png)
 
 ## Description
 
