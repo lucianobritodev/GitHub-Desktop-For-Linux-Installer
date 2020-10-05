@@ -32,6 +32,10 @@
 #		- Adicionado função de notificação
 #
 #
+#   v2.0 05/10/2020, Luciano
+#		- Atualização do código e comentários
+#		- Adicionado função de senha, dependências e desacoplamento.
+#
 # ----------------------------------------------------------------------------------- #
 # Testado em:
 #   bash 4.4.19
@@ -39,7 +43,7 @@
 #
 #
 # -------------------------------- VARIABLE ----------------------------------------- #
-PASSWORD="$(zenity --password)"
+PASSWORD=
 GITHUB_DESKTOP_INFORMATION=/home/$USER/.github-desktop/github-desktop-information.txt
 INSTALLED_VERSION="/home/$USER/.github-desktop/github-desktop-version.txt"
 UPDATED_VERSION=
@@ -47,13 +51,16 @@ RELEASE=
 LINK=
 SEP="|"
 # -------------------------------- TESTS ------------------------------------------- #
-[ ! -x $(which lynx) ]	 && echo "$PASSWORD" | sudo -S apt install lynx   -y 	# Is Lynx	Installed?
-[ ! -x $(which gdebi) ]  && echo "$PASSWORD" | sudo -S apt install gdebi  -y 	# Is Gdebi	Installed?
-[ ! -x $(which zenity) ] && echo "$PASSWORD" | sudo -S apt install zenity -y 	# Is Zenity	Installed?
 
 
 #-------------------------------- FUNCTIONS --------------------------------------------#
+function password() {
+	PASSWORD="$(zenity --password)"
+}
+
 function install-github-desktop() {
+	password
+	dependences
 	rm -Rf github-desktop.deb*
 	xterm -e "wget -c $LINK -O github-desktop.deb"
 	echo "$PASSWORD" | sudo -S xterm -e "gdebi -n github-desktop.deb"
@@ -64,8 +71,16 @@ function notification() {
 
 	zenity --notification --text="GitHub-Desktop\nGitHub-Desktop está instalado na versão $1."
 }
+
+function dependences() {
+	[ ! -x $(which lynx) ]	 && echo "$PASSWORD" | sudo -S apt install lynx   -y 	# Is Lynx	Installed?
+	[ ! -x $(which gdebi) ]  && echo "$PASSWORD" | sudo -S apt install gdebi  -y 	# Is Gdebi	Installed?
+	[ ! -x $(which zenity) ] && echo "$PASSWORD" | sudo -S apt install zenity -y 	# Is Zenity	Installed?	
+}
+
 # -------------------------------- EXECUTION ----------------------------------------- #
 clear
+
 [ ! -d /home/$USER/.github-desktop/ ] && mkdir /home/$USER/.github-desktop/
 cd /home/$USER/.github-desktop/
 lynx --source https://github.com/shiftkey/desktop/releases |\
