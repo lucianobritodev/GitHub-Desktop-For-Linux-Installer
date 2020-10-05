@@ -34,7 +34,10 @@
 #
 #   v2.0 05/10/2020, Luciano
 #		- Atualização do código e comentários
-#		- Adicionado função de senha, dependências e desacoplamento.
+#		- Adicionado função de senha.
+#		- Adicionado função de instalação de dependências
+#		- Realizado o desacoplamento das funções
+#		- Removido notificação de comparação de versões instaladas e remota
 #
 # ----------------------------------------------------------------------------------- #
 # Testado em:
@@ -107,7 +110,6 @@ if [ "$(cat $INSTALLED_VERSION)" != "$(echo $UPDATED_VERSION)" ]; then
 	unset INSTALLED_VERSION && INSTALLED_VERSION="$UPDATED_VERSION"
 	notification "$INSTALLED_VERSION"
 else
-	zenity  --warning --text="A versão do GitHub-Desktop disponível no repositório remoto é a mesma instalada!\n\n" --ellipsize
 	INSTALLED_VERSION="$(cat $INSTALLED_VERSION)"
 	notification "$INSTALLED_VERSION"
 fi
