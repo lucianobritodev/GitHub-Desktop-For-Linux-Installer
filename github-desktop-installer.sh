@@ -47,8 +47,9 @@
 #
 # -------------------------------- VARIABLE ----------------------------------------- #
 PASSWORD=
+CHECK_GITHUB_DESKTOP_INSTALLED=$(which github-desktop)
 GITHUB_DESKTOP_INFORMATION=/home/$USER/.github-desktop/github-desktop-information.txt
-INSTALLED_VERSION="/home/$USER/.github-desktop/github-desktop-version.txt"
+INSTALLED_VERSION=/home/$USER/.github-desktop/github-desktop-version.txt
 UPDATED_VERSION=
 RELEASE=
 LINK=
@@ -72,7 +73,7 @@ function install-github-desktop() {
 
 function notification() {
 
-	zenity --notification --text="GitHub-Desktop\nGitHub-Desktop está instalado na versão $1."
+	zenity --notification --text="GitHub-Desktop\nGitHub-Desktop $1 $2!"
 }
 
 function dependences() {
@@ -91,27 +92,29 @@ lynx --source https://github.com/shiftkey/desktop/releases |\
   head -1 | sed "s/<a\ href=\"//;s/<\/a>//;s/\">/|/" > /home/$USER/.github-desktop/github-desktop-information.txt
 
 RELEASE=$(cat $GITHUB_DESKTOP_INFORMATION | cut -d "$SEP" -f 1 | sed "s/\/shiftkey\/desktop\/releases\/tag\/release-//;s/ //g")
-UPDATED_VERSION=$(cat $GITHUB_DESKTOP_INFORMATION  | cut -d "$SEP" -f 2)
+UPDATED_VERSION="$(cat $GITHUB_DESKTOP_INFORMATION  | cut -d $SEP -f 2)"
 LINK="https://github.com/shiftkey/desktop/releases/download/release-$RELEASE/GitHubDesktop-linux-$RELEASE.deb"
 
 #  Is github-desktop Installed?
-if [ -e $(which github-desktop) != 0 ]; then
-	zenity --question --title="Instalação do GitHub-Desktop" --text="O GitHub-Desktop não esta instalado, você deseja instalá-lo agora?\n\n" --ellipsize
+if ! [ -e "$CHECK_GITHUB_DESKTOP_INSTALLED" ]; then
+	zenity --question --title="Instalação do GitHub-Desktop" --text="O GitHub-Desktop não está instalado, você deseja instalá-lo agora?\n\n" --ellipsize
 	[ $? == 0 ] && install-github-desktop
-	unset INSTALLED_VERSION && INSTALLED_VERSION="$UPDATED_VERSION"
-	notification "$INSTALLED_VERSION"
+	echo "$UPDATED_VERSION" > $INSTALLED_VERSION
+	VERSION="$(cat $INSTALLED_VERSION)"
+	notification "foi instalado com sucesso e está na versão" "$VERSION"
 	exit 0
 fi
 
 # Is github-desktop Updated?
 if [ "$(cat $INSTALLED_VERSION)" != "$(echo $UPDATED_VERSION)" ]; then
-	zenity zenity --question --title="Atualização do GitHub-Desktop" --text="Existe uma nova versão do GitHub-Desktop, você deseja atualizá-lo agora?\n\n" --ellipsize
+	zenity --question --title="Atualização do GitHub-Desktop" --text="Existe uma nova versão do GitHub-Desktop disponível!\nVocê deseja atualizá-lo agora?\n\n" --ellipsize
 	[ $? == 0 ] && install-github-desktop
-	unset INSTALLED_VERSION && INSTALLED_VERSION="$UPDATED_VERSION"
-	notification "$INSTALLED_VERSION"
+	echo "$UPDATED_VERSION" > $INSTALLED_VERSION
+	VERSION="$(cat $INSTALLED_VERSION)"
+	notification "foi atualizado com sucesso e está na versão" "$VERSION"
 else
-	INSTALLED_VERSION="$(cat $INSTALLED_VERSION)"
-	notification "$INSTALLED_VERSION"
+	VERSION="$(cat $INSTALLED_VERSION)"
+	notification "já está instalado na ultima versão disponível" "$VERSION"
 fi
 
 exit 0
