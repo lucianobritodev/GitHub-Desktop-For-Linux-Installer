@@ -23,26 +23,38 @@
 # Histórico:
 #
 #   v1.0 01/05/2020, Luciano
-#		- Criado software de monitoramento de novas releases do github-desktop para linux
+#		- Criado software de monitoramento de novas releases do github-desktop para linux.
 #
 #
 #   v1.1 03/05/2020, Luciano
-#		- Atualização do código e comentários
-#		- Atualização do nome do script
-#		- Adicionado função de notificação
+#		- Atualização do código e comentários.
+#		- Atualização do nome do script.
+#		- Adicionado função de notificação.
 #
 #
 #   v2.0 05/10/2020, Luciano
-#		- Atualização do código e comentários
+#		- Atualização do código e comentários.
 #		- Adicionado função de senha.
-#		- Adicionado função de instalação de dependências
-#		- Realizado o desacoplamento das funções
-#		- Removido notificação de comparação de versões instaladas e remota
+#		- Adicionado função de instalação de dependências.
+#		- Realizado o desacoplamento das funções.
+#		- Removido notificação de comparação de versões instaladas e remota.
+#
+#
+#   v3.0 18/10/2020, Luciano
+#		- Modificado função de notificação aplicado o conceito de polimorfismo.
+#		- Desacoplamento das funções de verificação de instalação.
+#		- Adicionado função de verificação da instalação do software no início.
+#		- Adicionado duas variáveis, uma global que captura o caminho software
+# 			e outra local que captura a versão do software instalado.
+#		- Testes feito com zsh 5.4.2.
+#		- Adicionado comentários de versionamento do software.
+#		- Adicionado função de verificação de internet.
 #
 # ----------------------------------------------------------------------------------- #
 # Testado em:
 #   bash 4.4.19
 #	bash 4.4.20(1)
+#	zsh 5.4.2
 #
 #
 # -------------------------------- VARIABLE ----------------------------------------- #
@@ -54,10 +66,24 @@ UPDATED_VERSION=
 RELEASE=
 LINK=
 SEP="|"
+
+
 # -------------------------------- TESTS ------------------------------------------- #
 
 
 #-------------------------------- FUNCTIONS --------------------------------------------#
+
+function test-conection {
+	$(ping -c 2 www.github.com 1>&/dev/null)
+	if [ $? != 0 ]; then 
+		$(ping -c 2 www.google.com 1>&/dev/null)
+		if [ $? != 0 ]; then
+			zenity --notification --text="GitHub-Desktop\nNão foi possível verificar outra versão do GitHub-Desktop! Por favor, verifique sua conexão com a internet."
+			exit 1
+		fi
+	fi
+}
+
 function password() {
 	PASSWORD="$(zenity --password)"
 }
@@ -85,11 +111,13 @@ function dependences() {
 # -------------------------------- EXECUTION ----------------------------------------- #
 clear
 
+test-conection
+
 [ ! -d /home/$USER/.github-desktop/ ] && mkdir /home/$USER/.github-desktop/
 cd /home/$USER/.github-desktop/
 lynx --source https://github.com/shiftkey/desktop/releases |\
  grep -A 1 '<a href="/shiftkey/desktop/releases/tag/release-' |\
-  head -1 | sed "s/<a\ href=\"//;s/<\/a>//;s/\">/|/" > /home/$USER/.github-desktop/github-desktop-information.txt
+  head -1 | sed "s/<a\ href=\"//;s/<\/a>//;s/\">/|/" > $GITHUB_DESKTOP_INFORMATION
 
 RELEASE=$(cat $GITHUB_DESKTOP_INFORMATION | cut -d "$SEP" -f 1 | sed "s/\/shiftkey\/desktop\/releases\/tag\/release-//;s/ //g")
 UPDATED_VERSION="$(cat $GITHUB_DESKTOP_INFORMATION  | cut -d $SEP -f 2)"
