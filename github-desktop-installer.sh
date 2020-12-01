@@ -73,7 +73,11 @@ SEP="|"
 
 #-------------------------------- FUNCTIONS --------------------------------------------#
 
-function test-conection {
+function test-connection {
+
+	$(ping -c 2 www.github.com 1>&/dev/null)
+	[ $? != 0 ] && sleep 30
+
 	$(ping -c 2 www.github.com 1>&/dev/null)
 	if [ $? != 0 ]; then 
 		$(ping -c 2 www.google.com 1>&/dev/null)
@@ -111,7 +115,7 @@ function dependences() {
 # -------------------------------- EXECUTION ----------------------------------------- #
 clear
 
-test-conection
+test-connection
 
 [ ! -d /home/$USER/.github-desktop/ ] && mkdir /home/$USER/.github-desktop/
 cd /home/$USER/.github-desktop/
