@@ -12,6 +12,16 @@ Installer created in bash shellscrip to facilitate the installation of the lates
 This script searches directly in the github.com/shiftkey/desktop repository to obtain the latest stable version and performs the installation or update of the software in linux by installing a .deb version.
 
 
+## Install
+
+Clone the project and download it to your local machine. Unzip and run the .sh file with a doble click, or after download, open the terminal on directory where to be the files and run:
+
+```
+./github-desktop-installer.sh
+
+```
+
+
 ## Contributors
 
 [Luciano Brito](https://github.com/LucianoAparecidoBritoGuedes/)
