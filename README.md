@@ -14,7 +14,7 @@ This script searches directly in the github.com/shiftkey/desktop repository to o
 
 ## Install
 
-Clone the project and download it to your local machine. Unzip and run the .sh file with a doble click, or after download, open the terminal on directory where to be the files and run:
+Clone the project and download it to your local machine. Unzip and run the **github-desktop-installer.sh** file with a doble click, or after download, open the terminal on directory where to be the files and run:
 
 ```
 ./github-desktop-installer.sh
